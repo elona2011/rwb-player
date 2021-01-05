@@ -1,24 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { createContext, useContext, useState } from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+  BrowserRouter
+} from "react-router-dom";
+import 'antd/dist/antd.css';
 import './App.css';
+import LoginUser from './pages/loginUser/loginUser'
+import { Spin, Space } from 'antd';
 
 function App() {
+  const [loading, setLoading] = useState(false)
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <div>
+          {/* A <Switch> looks through its children <Route>s and
+            renders the first one that matches the current URL. */}
+          <Switch>
+            <Route path="/loginuser">
+              <LoginUser />
+            </Route>
+            <Route path="/">
+              <Redirect
+                to="/loginuser"
+              />
+            </Route>
+          </Switch>
+          {loading && (<div className="loading">
+            <Spin size="large" />
+          </div>)}
+        </div>
+      </Router>
     </div>
   );
 }
