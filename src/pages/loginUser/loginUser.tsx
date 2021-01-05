@@ -62,7 +62,7 @@ const Login = () => {
             >
                 <Input
                     prefix={<LockOutlined className="site-form-item-icon" />}
-                    type="password"
+                    // type="password"
                     placeholder="密码"
                 />
             </Form.Item>

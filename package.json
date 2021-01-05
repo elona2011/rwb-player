@@ -28,7 +28,7 @@
     "eject": "react-scripts eject"
   },
   "proxy": "http://proxy.xlcmll.top:36912",
-  "homepage": "http://proxy.xlcmll.top:36912/loginuser",
+  "homepage": "http://proxy.xlcmll.top:36912/player",
   "eslintConfig": {
     "extends": [
       "react-app",
