@@ -9,6 +9,7 @@ import {
 import 'antd/dist/antd.css';
 import './App.css';
 import LoginUser from './pages/loginUser/loginUser'
+import PayMoney from './pages/payMoney/payMoney'
 import { Spin, Space } from 'antd';
 
 function App() {
@@ -23,6 +24,9 @@ function App() {
           <Switch>
             <Route path="/loginuser">
               <LoginUser />
+            </Route>
+            <Route path="/paymoney">
+              <PayMoney />
             </Route>
             <Route path="/">
               <Redirect
