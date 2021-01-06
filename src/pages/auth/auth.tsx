@@ -104,12 +104,12 @@ function PrivateRoute({ children, ...rest }: Props) {
     //         auth.loginUser(res.data.result)
     //     })
     // })
-   
+
     return (
         <Route
             {...rest}
             render={({ location }) =>
-                auth.user ? (
+                auth.user && !/('')|("")/.test(auth.user) ? (
                     children
                 ) : (
                         <Redirect

@@ -15,11 +15,19 @@ import { useState, useEffect } from 'react';
 
 const Login = () => {
     let history = useHistory()
+    let params = new URL(document.location.href).searchParams
+    const appid = params.get('appid')
+    const r = params.get('r')
+    useEffect(() => {
+        if (appid == null) {
+            message.error('缺少appid')
+        }
+        if (r == null) {
+            message.error('缺少r')
+        }
+    }, [])
 
     const onFinish = ({ username, password }: { username: string, password: string }) => {
-        let params = new URL(document.location.href).searchParams
-        const appid = params.get('appid')
-        const r = params.get('r')
         let data = new FormData()
         data.append('name', username)
         data.append('password', password)
@@ -34,10 +42,10 @@ const Login = () => {
         }).then(res => {
             // console.log(res.data)
             if (res.data) {
-                if (res.data.code === 1) {
-                    message.error('密码错误')
+                if (res.data.code !== 0) {
+                    message.error(res.data.result)
                 } else if (res.data.code === 0) {
-                    document.location.href = `http://proxy.xlcmll.top:36912${r}?uid=${res.data.result}`
+                    document.location.href = `${r}?uid=${res.data.result}`
                 }
             }
         })
@@ -62,7 +70,7 @@ const Login = () => {
             >
                 <Input
                     prefix={<LockOutlined className="site-form-item-icon" />}
-                    // type="password"
+                    type="password"
                     placeholder="密码"
                 />
             </Form.Item>

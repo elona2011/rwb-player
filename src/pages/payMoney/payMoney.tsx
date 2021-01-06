@@ -12,21 +12,41 @@ import {
 import axios from 'axios'
 import { useState, useEffect } from 'react';
 
+function getCookie(name: string) {
+    var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    if (match) return match[2];
+    return ''
+}
 
 const Login = () => {
     let history = useHistory()
-
-    const onFinish = ({ username, password }: { username: string, password: string }) => {
-        let params = new URL(document.location.href).searchParams
-        const appid = params.get('appid')
-        const r = params.get('r')
-        let data = new FormData()
-        data.append('name', username)
-        data.append('password', password)
-        data.append('appid', appid || '')
+    let [availableMoney, setAvailableMoney] = useState('0')
+    useEffect(() => {
         axios({
             method: 'post',
-            url: '/tasks/loginuser',
+            url: '/tasks/playermoney',
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(res => {
+            // console.log(res.data)
+            if (res.data) {
+                if (res.data.code !== 0) {
+                    message.error(res.data.result)
+                } else if (res.data.code === 0) {
+                    setAvailableMoney((res.data.result / 100).toFixed(2))
+                }
+            }
+        })
+    })
+
+    const onFinish = ({ phone, cash }: { phone: string, cash: string }) => {
+        let data = new FormData()
+        data.append('phone', phone)
+        data.append('cash', Math.floor(parseFloat(cash) * 100) + '')
+        axios({
+            method: 'post',
+            url: '/tasks/moneypay',
             data,
             headers: {
                 'Content-Type': 'multipart/form-data'
@@ -34,10 +54,11 @@ const Login = () => {
         }).then(res => {
             // console.log(res.data)
             if (res.data) {
-                if (res.data.code === 1) {
-                    message.error('密码错误')
+                if (res.data.code !== 0) {
+                    message.error(res.data.result)
                 } else if (res.data.code === 0) {
-                    document.location.href = `http://proxy.xlcmll.top:36912${r}?uid=${res.data.result}`
+                    message.success('申请成功，24小时内到账')
+                    setAvailableMoney((res.data.result / 100).toFixed(2))
                 }
             }
         })
@@ -51,13 +72,19 @@ const Login = () => {
             onFinish={onFinish}
         >
             <Form.Item
-                name="username"
+                name="money"
+                label="可提现金额"
+            >
+                <span>{availableMoney}元</span>
+            </Form.Item>
+            <Form.Item
+                name="phone"
                 rules={[{ required: true, message: '请输入您的手机号!' }]}
             >
                 <Input prefix={<PhoneOutlined className="site-form-item-icon" />} placeholder="手机号" />
             </Form.Item>
             <Form.Item
-                name="password"
+                name="cash"
                 rules={[{ required: true, message: '请输入您的提现金额!' }]}
             >
                 <Input
@@ -81,7 +108,6 @@ const Login = () => {
                     提现
             </Button>
                 <p style={{ color: 'red' }}>请开启：微信-我-支付-右上角三个点-允许通过手机号向我转账，否则无法到账！</p>
-                <p style={{ color: 'red' }}>提现金额最低1元，24小时内到账!</p>
                 {/* Or <a href="">register now!</a> */}
             </Form.Item>
         </Form>
