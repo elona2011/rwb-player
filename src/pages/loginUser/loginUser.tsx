@@ -89,7 +89,7 @@ const Login = () => {
                 <Button type="primary" htmlType="submit" className="login-form-button">
                     登陆/注册
             </Button>
-                <p style={{ color: 'red' }}>请使用固定的账号密码登陆，新账号将自动注册并登陆!</p>
+                <p style={{ color: 'red' }}>请牢记账号密码，新账号将自动注册并登陆!</p>
                 {/* Or <a href="">register now!</a> */}
             </Form.Item>
         </Form>
