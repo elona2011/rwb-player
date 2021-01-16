@@ -16,7 +16,7 @@ function getCookie(name: string) {
 }
 
 const authContext = createContext<{ user: string, signin: Function, loginUser: Function }>({
-    user: getCookie('player'),
+    user: getCookie('playeruid'),
     signin: () => { },
     loginUser: () => { }
 });
@@ -48,7 +48,7 @@ const ProvideAuth = ({ children }: { children: React.ReactNode }) => {
 }
 
 const useProvideAuth = () => {
-    const [user, setUser] = useState(getCookie('player'));
+    const [user, setUser] = useState(getCookie('playeruid'));
 
     const signin = (username: string, password: string, captcha: string, success: Function, fail: Function) => {
         let data = new FormData()
