@@ -21,6 +21,7 @@ function getCookie(name: string) {
 const Login = () => {
     let history = useHistory()
     let [availableMoney, setAvailableMoney] = useState('0')
+    let [taskNum, setTaskNum] = useState(0)
     useEffect(() => {
         axios({
             method: 'post',
@@ -34,34 +35,39 @@ const Login = () => {
                 if (res.data.code !== 0) {
                     message.error(res.data.result)
                 } else if (res.data.code === 0) {
-                    setAvailableMoney((res.data.result / 100).toFixed(2))
+                    setAvailableMoney(res.data.result.money)
+                    setTaskNum(res.data.result.taskNum)
                 }
             }
         })
     })
 
     const onFinish = ({ phone, cash }: { phone: string, cash: string }) => {
-        let data = new FormData()
-        data.append('phone', phone)
-        data.append('cash', Math.floor(parseFloat(cash) * 100) + '')
-        axios({
-            method: 'post',
-            url: '/tasks/moneypay',
-            data,
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        }).then(res => {
-            // console.log(res.data)
-            if (res.data) {
-                if (res.data.code !== 0) {
-                    message.error(res.data.result)
-                } else if (res.data.code === 0) {
-                    message.success('申请成功，24小时内到账')
-                    setAvailableMoney((res.data.result / 100).toFixed(2))
+        if (taskNum < 1) {
+            message.error('完成一个任务就可以提现了！')
+        } else {
+            let data = new FormData()
+            data.append('phone', phone)
+            data.append('cash', cash)
+            axios({
+                method: 'post',
+                url: '/tasks/moneypay',
+                data,
+                headers: {
+                    'Content-Type': 'multipart/form-data'
                 }
-            }
-        })
+            }).then(res => {
+                // console.log(res.data)
+                if (res.data) {
+                    if (res.data.code !== 0) {
+                        message.error(res.data.result)
+                    } else if (res.data.code === 0) {
+                        message.success('申请成功，24小时内到账')
+                        setAvailableMoney(res.data.result.money)
+                    }
+                }
+            })
+        }
     };
 
     return (
@@ -72,10 +78,16 @@ const Login = () => {
             onFinish={onFinish}
         >
             <Form.Item
-                name="money"
-                label="可提现金额"
+                name="task"
+                label="已完成任务"
             >
-                <span>{availableMoney}元</span>
+                <span>{taskNum}个</span>
+            </Form.Item>
+            <Form.Item
+                name="money"
+                label="可提现积分"
+            >
+                <span>{availableMoney}积分</span>
             </Form.Item>
             <Form.Item
                 name="phone"
@@ -85,11 +97,11 @@ const Login = () => {
             </Form.Item>
             <Form.Item
                 name="cash"
-                rules={[{ required: true, message: '请输入您的提现金额!' }]}
+                rules={[{ required: true, message: '请输入您的提现积分!' }]}
             >
                 <Input
                     prefix={<MoneyCollectOutlined className="site-form-item-icon" />}
-                    placeholder="提现金额"
+                    placeholder="提现积分"
                 />
             </Form.Item>
 
