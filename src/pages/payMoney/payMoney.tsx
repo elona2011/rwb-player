@@ -23,7 +23,8 @@ function getCookie(name: string) {
     return ''
 }
 
-const Login = () => {
+const PayMoney = () => {
+    const [form] = Form.useForm()
     let history = useHistory()
     let [availableMoney, setAvailableMoney] = useState('0')
     let [moneyPayed, setMoneyPayed] = useState('0')
@@ -52,6 +53,7 @@ const Login = () => {
     })
 
     const onFinish = ({ phone, cash }: { phone: string, cash: string }) => {
+        form.resetFields()
         if (taskNum < 1) {
             message.error('完成一个任务就可以提现了！')
         } else {
@@ -81,7 +83,7 @@ const Login = () => {
 
     return (
         <Form
-
+            form={form}
             name="normal_login"
             className="login-form"
             initialValues={{ remember: true }}
@@ -141,4 +143,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default PayMoney
