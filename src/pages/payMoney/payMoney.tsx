@@ -26,8 +26,8 @@ function getCookie(name: string) {
 const Login = () => {
     let history = useHistory()
     let [availableMoney, setAvailableMoney] = useState('0')
-    let [moneyPayed, setMoneyPayed] = useState(0)
-    let [moneyPaying, setMoneyPaying] = useState(0)
+    let [moneyPayed, setMoneyPayed] = useState('0')
+    let [moneyPaying, setMoneyPaying] = useState('0')
     let [taskNum, setTaskNum] = useState(0)
     useEffect(() => {
         axios({
@@ -43,9 +43,9 @@ const Login = () => {
                     message.error(res.data.result)
                 } else if (res.data.code === 0) {
                     setAvailableMoney(res.data.result.money)
-                    setMoneyPayed(res.data.result.moneyPayed)
+                    setMoneyPayed((res.data.result.moneyPayed / 100).toFixed(2))
                     setMoneyPaying(res.data.result.moneyPaying)
-                    setTaskNum(res.data.result.taskNum)
+                    setTaskNum((res.data.result.taskNum))
                 }
             }
         })
@@ -92,8 +92,8 @@ const Login = () => {
                 <span className="col2">{taskNum}个</span>
             </div>
             <div className="info">
-                <span>已提现积分：</span>
-                <span className="col2">{moneyPayed}积分</span>
+                <span>已提现金额：</span>
+                <span className="col2">{moneyPayed}元</span>
             </div>
             <div className="info">
                 <span>当前积分：</span>
