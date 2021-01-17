@@ -90,6 +90,10 @@ const PayMoney = () => {
             onFinish={onFinish}
         >
             <div className="info">
+                <span>我的ID：</span>
+                <span className="col2">{getCookie('playeruid')}</span>
+            </div>
+            <div className="info">
                 <span>已完成任务：</span>
                 <span className="col2">{taskNum}个</span>
             </div>
