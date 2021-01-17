@@ -12,6 +12,11 @@ import {
 import axios from 'axios'
 import { useState, useEffect } from 'react';
 
+const layout = {
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
+};
+
 function getCookie(name: string) {
     var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
     if (match) return match[2];
@@ -21,6 +26,8 @@ function getCookie(name: string) {
 const Login = () => {
     let history = useHistory()
     let [availableMoney, setAvailableMoney] = useState('0')
+    let [moneyPayed, setMoneyPayed] = useState(0)
+    let [moneyPaying, setMoneyPaying] = useState(0)
     let [taskNum, setTaskNum] = useState(0)
     useEffect(() => {
         axios({
@@ -36,6 +43,8 @@ const Login = () => {
                     message.error(res.data.result)
                 } else if (res.data.code === 0) {
                     setAvailableMoney(res.data.result.money)
+                    setMoneyPayed(res.data.result.moneyPayed)
+                    setMoneyPaying(res.data.result.moneyPaying)
                     setTaskNum(res.data.result.taskNum)
                 }
             }
@@ -72,23 +81,29 @@ const Login = () => {
 
     return (
         <Form
+
             name="normal_login"
             className="login-form"
             initialValues={{ remember: true }}
             onFinish={onFinish}
         >
-            <Form.Item
-                name="task"
-                label="已完成任务"
-            >
-                <span>{taskNum}个</span>
-            </Form.Item>
-            <Form.Item
-                name="money"
-                label="可提现积分"
-            >
-                <span>{availableMoney}积分</span>
-            </Form.Item>
+            <div className="info">
+                <span>已完成任务：</span>
+                <span className="col2">{taskNum}个</span>
+            </div>
+            <div className="info">
+                <span>已提现积分：</span>
+                <span className="col2">{moneyPayed}积分</span>
+            </div>
+            <div className="info">
+                <span>当前积分：</span>
+                <span className="col2">{availableMoney}积分</span>
+            </div>
+            <div className="info">
+                <span>提现中的积分：</span>
+                <span className="col2">{moneyPaying}积分</span>
+            </div>
+
             <Form.Item
                 name="phone"
                 rules={[{ required: true, message: '请输入您的手机号!' }]}
@@ -101,7 +116,7 @@ const Login = () => {
             >
                 <Input
                     prefix={<MoneyCollectOutlined className="site-form-item-icon" />}
-                    placeholder="提现积分"
+                    placeholder="请填写积分（100积分=1元）"
                 />
             </Form.Item>
 

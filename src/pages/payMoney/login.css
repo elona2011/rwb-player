@@ -1,6 +1,6 @@
 .login-form {
     max-width: 300px;
-    margin: 100px auto;
+    margin: 50px auto;
 }
 
 .login-form-forgot {
@@ -14,3 +14,12 @@
 .login-form-button {
     width: 100%;
 }
+
+.info {
+    margin: 20px 0;
+    position: relative;
+}
+/* .info .col2{
+    position: absolute;
+    left: 40vw;
+} */

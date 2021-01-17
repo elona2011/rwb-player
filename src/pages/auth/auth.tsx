@@ -109,6 +109,7 @@ function PrivateRoute({ children, ...rest }: Props) {
         <Route
             {...rest}
             render={({ location }) =>
+                // children
                 auth.user && !/('')|("")/.test(auth.user) ? (
                     children
                 ) : (
